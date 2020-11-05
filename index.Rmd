@@ -6,19 +6,26 @@ output:
     toc_float: true
 ---
 
-## Homework 4
+## Welcome to my space
 
-### Introduction
 
-word
+- __Name:__ Jiaying Ning
+- __Program:__ Biostatistics
+- __Project:__ Homework 4
+- __Dashboard:__ [pretty plot](dashboard.html)
 
-### my academic and professional experience
+<img src="images/datascience.gif" style="width:80%; margin-left: 50px" align="top">
 
-word
+I realized my interest for public health as I was taking courses about neuroscience and mental health as an undergraduate student. As my understanding for mental health problems grew, I saw the urgency in taking action to help those in need. 
 
-### To see more information about me
+I graduated from the [University of Illinois at Urbana-Champaign](https://illinois.edu/) with a bachelor degree in Statistics and Psychology in 2020. I am currently studying for my master of biostatistics program in [Columbia University](https://www.mailman.columbia.edu/become-student/departments/biostatistics)
 
-- [github account](https://github.com/Jiaying-Ning/)
+My resume is available [here](images/Resume.pdf).
+You can also click on [About me](about.html) to see more information about me.
+
+
+
+
 
 
 
