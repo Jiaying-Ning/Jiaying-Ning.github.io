@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "homework4_dashboard"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -25,23 +25,24 @@ library(plotly)
 data("ny_noaa")
 ```
 
-
+- Some interesting plots regarding the weather in Central Park, NY between 1981 to 2010
 
 ```{r}
- 
+ # importing dataset
 ny_noaa_df=
   ny_noaa %>%
-   janitor::clean_names() %>%
+   janitor::clean_names() %>% #clean the variable names
    separate(date, c("year","month","day"), sep = "([-])") %>%
-  filter(id == "USW00094728" | id == "USW00094789")%>%
+  filter(id == "USW00094728" )%>% #subsetting dataset, selecting only central park to be our interest of study
 mutate(
-  name = recode(id, USW00094728 = "CITY_CENTRAL_PARK", USW00094789 = "JFK_Airport"),
+  name = recode(id, USW00094728 = "CITY_CENTRAL_PARK"), #renaming the variable, changing year, month, and temperature variable to numeric
     year = as.numeric(year),
     month = as.numeric(month),
     tmax = as.numeric(tmax),
      tmin = as.numeric(tmin))%>%
-     filter(!is.na(tmin),
-            year > 2000)
+     filter(!is.na(tmin)) %>% #clear na
+  select(-id) %>%#deleting id
+  relocate(name)
 
 
 ```
@@ -50,16 +51,17 @@ mutate(
 Column {data-width=650}
 -----------------------------------------------------------------------
 
-### Chart A
+### scatterplot for tmin,tmax
 
-##this is a scatterplot showing distribution of tmin and tmax from 2000-2010 in Central Park and JFK airport
 
 ```{r}
+## this is a scatterplot showing distribution of tmin and tmax from 2000-2010 in Central Park and JFK airport
+
 ny_noaa_df %>%
   mutate(text_label = str_c("year: ", year, "\nmonth: ", month)) %>% 
   plot_ly(
     x = ~tmin, y = ~tmax, type = "scatter", mode = "markers",
-    color = ~year, text = ~text_label, alpha = 0.5)
+    color = ~year, text = ~text_label, alpha = 0.2)
 ```
 
 
@@ -68,15 +70,33 @@ ny_noaa_df %>%
 Column {data-width=350}
 -----------------------------------------------------------------------
 
-### Chart B
+### bar graph for the total snowfall across years
+
 
 ```{r}
+### here is a bar graph showing the distribution of snowfall for each year
+ny_noaa_df %>% 
+   group_by(year) %>% 
+  summarise(snow = sum(snow)) %>%
+   mutate(
+     year = reorder(year, snow),
+    text_label = str_c("year: ", year, "\nsnow: ", snow)) %>% 
+    plot_ly(x = ~year, y = ~snow, color = ~year, text=~text_label, type = "bar", colors = "viridis")
+  
 
 ```
 
-### Chart C
+
+### violin graph for maximum temperature within each month
+
+
 
 ```{r}
+## Here is a violin graph that shows the distribution of maximum temperature within each month.
+ny_noaa_df %>% 
+  mutate(month = reorder(month, tmax),
+      text_label = str_c("month: ", month, "\ntmax: ", tmax)) %>% 
+  plot_ly(y = ~tmax, color = ~month,text= ~text_label, type = "violin", colors = "viridis")
 
 ```
 
