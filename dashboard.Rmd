@@ -10,14 +10,60 @@ output:
 library(flexdashboard)
 ```
 
+```{r}
+library(httr)
+library(jsonlite)
+library(p8105.datasets)
+library(tidyverse)
+library(ggridges)
+
+library(plotly)
+```
+
+
+```{r}
+data("ny_noaa")
+```
+
+
+
+```{r}
+ 
+ny_noaa_df=
+  ny_noaa %>%
+   janitor::clean_names() %>%
+   separate(date, c("year","month","day"), sep = "([-])") %>%
+  filter(id == "USW00094728" | id == "USW00094789")%>%
+mutate(
+  name = recode(id, USW00094728 = "CITY_CENTRAL_PARK", USW00094789 = "JFK_Airport"),
+    year = as.numeric(year),
+    month = as.numeric(month),
+    tmax = as.numeric(tmax),
+     tmin = as.numeric(tmin))%>%
+     filter(!is.na(tmin),
+            year > 2000)
+
+
+```
+
+
 Column {data-width=650}
 -----------------------------------------------------------------------
 
 ### Chart A
 
-```{r}
+##this is a scatterplot showing distribution of tmin and tmax from 2000-2010 in Central Park and JFK airport
 
+```{r}
+ny_noaa_df %>%
+  mutate(text_label = str_c("year: ", year, "\nmonth: ", month)) %>% 
+  plot_ly(
+    x = ~tmin, y = ~tmax, type = "scatter", mode = "markers",
+    color = ~year, text = ~text_label, alpha = 0.5)
 ```
+
+
+
 
 Column {data-width=350}
 -----------------------------------------------------------------------
